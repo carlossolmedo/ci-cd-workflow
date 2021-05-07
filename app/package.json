@@ -1,0 +1,27 @@
+{
+  "name": "api",
+  "version": "1.0.0",
+  "description": "API - Fatboar",
+  "main": "index.js",
+  "scripts": {
+    "test": "NODE_ENV=test babel-node index.js",
+    "start": "NODE_ENV=prod babel-node index.js",
+    "dev": "NODE_ENV=dev babel-node index.js",
+    "stage": "NODE_ENV=stage babel-node index.js"
+  },
+  "keywords": [
+    "api"
+  ],
+  "author": "Carlos Olmedo",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.17.1",
+    "mongodb": "^3.6.3"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.12.8",
+    "@babel/node": "^7.12.6",
+    "@babel/preset-env": "^7.12.7",
+    "dotenv": "^8.2.0"
+  }
+}

@@ -1,0 +1,51 @@
+version: "3.8"
+
+networks:
+  web:
+    external: true
+
+services:
+  db-stage:
+    image: mongo:4.0
+    container_name: deploy-stage_api-db
+    expose:
+      - 27017
+    networks:
+      - web
+    # volumes:
+    #   - ".${MONGO_DATA_DIR}:${MONGO_DATA_DIR}"
+    environment:
+      - "MONGO_INITDB_ROOT_USERNAME=${MONGO_INITDB_ROOT_USERNAME}"
+      - "MONGO_INITDB_ROOT_PASSWORD=${MONGO_INITDB_ROOT_PASSWORD}"
+      - "MONGO_INITDB_DATABASE=${MONGO_INITDB_DATABASE}"
+      - "MONGO_DATA_DIR=${MONGO_DATA_DIR}"
+    restart: always
+
+  api-stage:
+    image: "${REGISTRY}/${IMAGE_NAME}:${IMAGE_TAG}"
+    container_name: deploy-stage_api
+    ports:
+      - "${PORT}:${PORT}"
+    depends_on:
+      - db-stage
+    networks:
+      - web
+    # volumes:
+    #   - ./app:/home/workflow/app
+    environment:
+      - "IMAGE_VERSION=${IMAGE_VERSION}"
+      - "PORT=${PORT}"
+      - "MONGO_INITDB_ROOT_USERNAME=${MONGO_INITDB_ROOT_USERNAME}"
+      - "MONGO_INITDB_ROOT_PASSWORD=${MONGO_INITDB_ROOT_PASSWORD}"
+      - "MONGO_INITDB_DATABASE=${MONGO_INITDB_DATABASE}"
+      - "MONGO_DATA_DIR=${MONGO_DATA_DIR}"
+      - "DB_SERVICE=${DB_SERVICE}"
+    labels:
+      - "traefik.enable=true"
+      - "traefik.docker.network=web"
+      - "traefik.http.routers.api-stage.rule=Host(${API_HOST})"
+      - "traefik.http.routers.api-stage.entrypoints=websecure"
+      - "traefik.http.routers.api-stage.service=api-stage"
+      - "traefik.http.services.api-stage.loadbalancer.server.port=${PORT}"
+    command: npm run stage
+    restart: always

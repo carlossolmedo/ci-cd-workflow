@@ -1,0 +1,41 @@
+version: "3.8"
+
+networks:
+  web:
+    external: true
+
+services:
+  db:
+    build:
+      dockerfile: Dockerfile
+      context: ./mongo
+    expose:
+      - 27017
+    networks:
+      - web
+    environment:
+      - "MONGO_INITDB_ROOT_USERNAME=${MONGO_INITDB_ROOT_USERNAME}"
+      - "MONGO_INITDB_ROOT_PASSWORD=${MONGO_INITDB_ROOT_PASSWORD}"
+      - "MONGO_INITDB_DATABASE=${MONGO_INITDB_DATABASE}"
+      - "MONGO_DATA_DIR=${MONGO_DATA_DIR}"
+
+  api:
+    build:
+      dockerfile: Dockerfile
+      context: ./api
+    image: "${IMAGE_NAME}:${BUILD_NUMBER}"
+    container_name: jenkins_api
+    ports:
+      - "${PORT}:${PORT}"
+    depends_on:
+      - db
+    networks:
+      - web
+    environment:
+      - "IMAGE_VERSION=${IMAGE_VERSION}"
+      - "PORT=${PORT}"
+      - "MONGO_INITDB_ROOT_USERNAME=${MONGO_INITDB_ROOT_USERNAME}"
+      - "MONGO_INITDB_ROOT_PASSWORD=${MONGO_INITDB_ROOT_PASSWORD}"
+      - "MONGO_INITDB_DATABASE=${MONGO_INITDB_DATABASE}"
+      - "MONGO_DATA_DIR=${MONGO_DATA_DIR}"
+      - "DB_SERVICE=${DB_SERVICE}"

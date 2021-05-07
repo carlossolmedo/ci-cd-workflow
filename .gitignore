@@ -1,0 +1,30 @@
+# ---> Node
+
+# API
+app/node_modules
+app/jspm_packages
+
+# dotenv environment variables file
+app/.env
+app/.env.*
+
+# Logs
+app/*.log
+app/npm-debug.log*
+
+# Diagnostic reports (https://nodejs.org/api/report.html)
+app/report.[0-9]*.[0-9]*.[0-9]*.[0-9]*.json
+
+# Runtime data
+app/pids
+app/*.pid
+app/*.seed
+app/*.pid.lock
+
+# Optional npm cache directory
+app/.npm
+
+# Output of 'npm pack'
+app/*.tgz
+
+.jenkins.txt

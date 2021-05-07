@@ -1,0 +1,6 @@
+app/node_modules
+.git
+.gitignore
+docker
+scripts
+docker-compose*
